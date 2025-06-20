@@ -1112,8 +1112,14 @@ class KameraPenceresi(QMainWindow, Ui_MainWindow):
                 detector_backend="skip"
             )
             
-            if isinstance(result, list) and len(result) > 0:
-                emotions = result[0].get('emotion', {})
+            #if isinstance(result, list) and len(result) > 0:
+             #   emotions = result[0].get('emotion', {})
+             # DeepFace bazen liste bazen sözlük döndürebiliyor
+            if isinstance(result, list):
+                result = result[0] if result else None
+            
+            if isinstance(result, dict):
+                emotions = result.get('emotion', {})
                 if emotions:
                     # En yüksek skorlu duyguyu bul
                     dominant_emotion = max(emotions.items(), key=lambda x: x[1])
@@ -1191,6 +1197,7 @@ class KameraPenceresi(QMainWindow, Ui_MainWindow):
     
 
     def back_to_main_view(self):
+        self.canvas.hide()
         self.figure.clear()
         self.canvas.draw()
     
@@ -1346,6 +1353,13 @@ class KameraPenceresi(QMainWindow, Ui_MainWindow):
             self.figure.tight_layout()
             self.canvas.draw()
             self.canvas.show()
+    
+            # Arayüz durumunu güncelle
+            self.btn_back.setVisible(True)
+            self.btn_general_analysis.setVisible(False)
+            self.btn_person_analysis.setVisible(False)
+            # Personel listesi açıksa gizle
+            self.personnel_list_widget.setVisible(False)
     
         except Exception as e:
             print(f"Genel analiz hatası: {e}")
