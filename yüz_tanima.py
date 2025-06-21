@@ -30,6 +30,18 @@ except ImportError:
 import tensorflow as tf
 import pandas as pd
 
+# =============================================================================
+# def equalize_face(img):
+#     """Apply histogram equalization on the luminance channel of a BGR face image."""
+#     if img is None or img.size == 0:
+#         return img
+#     ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+#     y, cr, cb = cv2.split(ycrcb)
+#     y_eq = cv2.equalizeHist(y)
+#     ycrcb_eq = cv2.merge((y_eq, cr, cb))
+#     return cv2.cvtColor(ycrcb_eq, cv2.COLOR_YCrCb2BGR)
+# 
+# =============================================================================
 # Personel Listesi ve Silme
 class PersonelListDialog(QDialog):
     def __init__(self, parent=None, conn=None):
@@ -730,6 +742,7 @@ class KameraPenceresi(QMainWindow, Ui_MainWindow):
             return None
 
         try:
+           # face_img = equalize_face(face_img)
             # DeepFace'in beklentisi genellikle RGB formatıdır.
             # OpenCV varsayılan olarak BGR okur.
             face_rgb = cv2.cvtColor(face_img, cv2.COLOR_BGR2RGB)
@@ -943,7 +956,7 @@ class KameraPenceresi(QMainWindow, Ui_MainWindow):
                 face_img = frame_resized[y1c:y2c, x1c:x2c]
                 if face_img.size == 0:
                     continue
-
+                #face_img = equalize_face(face_img)
                 # Tanıma ve duygu analizi (sadece tanıma butonu basıldığında)
                 if self.recognition_active and not tanima_yapildi_bu_frame and w > 30 and h > 30:
                     try:
